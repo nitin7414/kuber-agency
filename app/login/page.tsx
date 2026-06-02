@@ -130,7 +130,7 @@ export default function PinLogin() {
         <div className="pin-logo-wrapper">
           <Image 
             src="/logo.png" 
-            alt="Shri Shyam Gas Agency" 
+            alt="Kuber-agency 
             width={70} 
             height={70} 
             className="pin-logo"

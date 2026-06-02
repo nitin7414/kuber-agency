@@ -1,11 +1,11 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.demo-agency.gasagency',
-  appName: 'Gas Agency',
+  appId: 'com.kuberagency',
+  appName: 'Kuber-agency',
   webDir: 'out',
   server: {
-    url: 'https://demo-agency-one.vercel.app/',
+    url: 'https://kuber-agency.vercel.app/',
     cleartext: true,
   }
 };

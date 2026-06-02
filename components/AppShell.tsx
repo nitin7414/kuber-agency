@@ -60,7 +60,7 @@ function Brand({ logoUrl }: { logoUrl?: string }) {
       <div className="brand-logo" style={{ background: "transparent", width: 40, height: 40, flexShrink: 0 }}>
         <Image src={logoUrl || "/logo.png"} alt="logo" width={40} height={40} style={{ borderRadius: "50%", objectFit: "cover" }} />
       </div>
-      <span className="brand-name" style={{ fontSize: "13px", fontWeight: 700, lineHeight: "1.3" }}>Agency-demo</span>
+      <span className="brand-name" style={{ fontSize: "13px", fontWeight: 700, lineHeight: "1.3" }}>Kuber-agency</span>
     </div>
   );
 }
@@ -118,7 +118,7 @@ function MobileHeader({ logoUrl }: { logoUrl?: string }) {
       <div className="brand-logo" style={{ width: 40, height: 40, background: "transparent", flexShrink: 0 }}>
         <Image src={logoUrl || "/logo.png"} alt="logo" width={40} height={40} style={{ borderRadius: "50%", objectFit: "cover" }} />
       </div>
-      <span className="brand-name" style={{ fontSize: "16px", fontWeight: 700, color: "var(--navy)" }}>Agency-demo</span>
+      <span className="brand-name" style={{ fontSize: "16px", fontWeight: 700, color: "var(--navy)" }}>Kuber-agency</span>
     </header>
   );
 }

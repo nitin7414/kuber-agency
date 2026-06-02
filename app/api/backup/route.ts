@@ -24,7 +24,7 @@ export async function GET() {
     ]);
 
     const backupPayload = {
-      app: "Agency-demo",
+      app: "Kuber-agency",
       version: "1.0",
       backupDate: new Date().toISOString(),
       data: {

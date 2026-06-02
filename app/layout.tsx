@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "Agency-demo",
+  title: "Kuber-agency",
   description: "LPG Agency Management System",
   manifest: "/manifest.json",
   appleWebApp: {
