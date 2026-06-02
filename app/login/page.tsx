@@ -130,7 +130,7 @@ export default function PinLogin() {
         <div className="pin-logo-wrapper">
           <Image 
             src="/logo.png" 
-            alt="Kuber-agency 
+            alt="Kuber-agency" 
             width={70} 
             height={70} 
             className="pin-logo"
