@@ -1,0 +1,118 @@
+// Prisma Schema - Shri Shyam Gas Agency Management System
+// Database: Neon (PostgreSQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// ADMIN / USER
+// ─────────────────────────────────────────
+model Admin {
+  id           String   @id @default(cuid())
+  logoUrl      String?
+  darkMode     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  adminPin     String @default("245773")
+}
+
+// ─────────────────────────────────────────
+// CUSTOMERS
+// ─────────────────────────────────────────
+model Customer {
+  id            String        @id @default(cuid())
+  name          String
+  mobile        String
+  email         String?
+  address       String?
+
+  // Document URLs (uploaded via UploadThing)
+  aadharUrl     String?
+  panUrl        String?
+  foodLicenseUrl String?
+  gstCertUrl    String?
+
+  // Cylinder tracking (auto-calculated)
+  totalDelivered  Int     @default(0)   // cumulative all-time delivered
+  totalEmptyLeft  Int     @default(0)   // current empty cylinders at customer shop
+  pendingBalance  Float   @default(0)   // running unpaid amount in ₹
+
+  transactions  Transaction[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// TRANSACTIONS
+// ─────────────────────────────────────────
+model Transaction {
+  id              String      @id @default(cuid())
+  customerId      String
+  customer        Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  // Each field is optional — any combo can be filled
+  cylindersDelivered  Int?    // how many delivered this transaction
+  emptiesCollected    Int?    // how many empties picked up this transaction
+  paymentAmount       Float?  // ₹ paid this transaction (installment)
+
+  // Snapshot values after this transaction (for history display)
+  balanceAfter        Float   // pending balance after this transaction
+  totalEmptyAfter     Int     // total empties at shop after this transaction
+
+  note            String?     // optional note
+
+  createdAt       DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// GLOBAL CYLINDER STOCK
+// A single row table to store agency-level totals
+// ─────────────────────────────────────────
+model AgencyStock {
+  id              String  @id @default(cuid())
+  totalFilled     Int     @default(0)   // filled cylinders at agency
+  totalEmpty      Int     @default(0)   // empty cylinders at agency
+  updatedAt       DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// TASKS (Google Notes style)
+// ─────────────────────────────────────────
+model Task {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────
+// ACTIVITY LOG
+// Records every action for Recent Activity page
+// ─────────────────────────────────────────
+model ActivityLog {
+  id          String   @id @default(cuid())
+  type        ActivityType
+  description String
+  customerId  String?
+  customerName String?
+  amount      Float?
+  cylinders   Int?
+  createdAt   DateTime @default(now())
+}
+
+enum ActivityType {
+  CUSTOMER_ADDED
+  TRANSACTION_ADDED
+  PAYMENT_RECEIVED
+  CYLINDERS_DELIVERED
+  EMPTIES_COLLECTED
+  TASK_ADDED
+  TASK_EDITED
+  STOCK_UPDATED
+}
