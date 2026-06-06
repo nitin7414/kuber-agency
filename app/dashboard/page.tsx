@@ -144,7 +144,7 @@ export default function DashboardPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, marginTop: 4 }}>
         <div>
           <h1 style={{ fontSize: "20px", fontWeight: 700, color: "var(--navy)", margin: 0 }}>Dashboard</h1>
-          <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: "2px 0 0 0" }}>AGency demo</p>
+          <p style={{ fontSize: "12px", color: "var(--text-muted)", margin: "2px 0 0 0" }}>Analytics</p>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {/* Add Customer Button */}
@@ -619,7 +619,7 @@ export default function DashboardPage() {
             </div>
 
             <div style={{ background: "var(--navy-pale)", padding: "10px 14px", borderRadius: "var(--radius-sm)", border: "1px solid var(--navy-border)", fontSize: 13, color: "var(--navy)", fontWeight: 600, fontFamily: "var(--font-mono)", wordBreak: "break-all" }}>
-              boim-610970700310@boi
+              Pay using QR Code above 
             </div>
 
             <button
