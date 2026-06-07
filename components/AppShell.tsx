@@ -3,7 +3,7 @@
 
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 // ─── SVG Icons ──────────────────────────────────────────────
@@ -131,45 +131,6 @@ export default function AppShell({
   children: React.ReactNode;
   logoUrl?: string;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  // APP LOCK LOGIC
-// APP LOCK LOGIC
-  useEffect(() => {
-    let appListener: any = null;
-
-    const initCapacitorAppLock = async () => {
-      try {
-        const { App } = await import('@capacitor/app');
-        
-        appListener = await App.addListener('appStateChange', async ({ isActive }) => {
-          if (!isActive && pathname !== "/login") {
-            // When app goes to background, instantly hide the UI by navigating to login
-            // (This prevents the app switcher from showing sensitive data)
-            router.replace("/login");
-          } 
-          else if (isActive && pathname !== "/login") {
-            // When app comes BACK to the foreground, the network is active again.
-            // Safely destroy the session so they are forced to enter the PIN.
-            await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
-            router.replace("/login");
-          }
-        });
-      } catch (err) {
-        console.warn("Capacitor App plugin not loaded.");
-      }
-    };
-
-    initCapacitorAppLock();
-
-    return () => {
-      if (appListener) {
-        appListener.remove();
-      }
-    };
-  }, [pathname, router]);
-
   return (
     <div className="app-layout">
       {/* Web sidebar */}

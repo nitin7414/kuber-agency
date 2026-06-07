@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { SecurityProvider } from "@/components/SecurityProvider";
 
 export const metadata: Metadata = {
   title: "Kuber-agency",
@@ -32,7 +33,9 @@ export default function RootLayout({
       <head />
       <body>
         <ThemeProvider>
-          {children}
+          <SecurityProvider>
+            {children}
+          </SecurityProvider>
           <Toaster
             position="top-center"
             toastOptions={{

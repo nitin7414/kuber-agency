@@ -89,6 +89,7 @@ export default function PinLogin() {
         }
       }
 
+      sessionStorage.setItem("app_unlocked", "true");
       router.push("/dashboard");
       router.refresh();
     } else {

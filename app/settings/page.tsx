@@ -123,6 +123,7 @@ export default function SettingsPage() {
 }
 
   async function handleLogout() {
+    sessionStorage.removeItem("app_unlocked");
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
