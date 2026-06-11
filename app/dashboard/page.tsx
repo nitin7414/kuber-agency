@@ -51,7 +51,13 @@ export default function DashboardPage() {
   const [search, setSearch] = useState("");
   const [showAddCustomer, setShowAddCustomer] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<"customers" | "due" | "empty" | "filled">("customers");
+  const [activeTab, setActiveTab] = useState<"customers" | "due" | "empty" | "filled" | "stock">("customers");
+
+  // Stock edit states
+  const [showEditStock, setShowEditStock] = useState(false);
+  const [editStockFilled, setEditStockFilled] = useState("");
+  const [editStockEmpty, setEditStockEmpty] = useState("");
+  const [stockSaving, setStockSaving] = useState(false);
 
   // Backup notification states
   const [exporting, setExporting] = useState(false);
@@ -137,6 +143,36 @@ export default function DashboardPage() {
     const timer = setTimeout(() => fetchCustomers(search), 250);
     return () => clearTimeout(timer);
   }, [search, fetchCustomers]);
+
+  useEffect(() => {
+    if (data) {
+      setEditStockFilled(String(data.totalFilled));
+      setEditStockEmpty(String(data.totalEmpty));
+    }
+  }, [data]);
+
+  async function handleSaveStock(e: React.FormEvent) {
+    e.preventDefault();
+    setStockSaving(true);
+    try {
+      const res = await fetch("/api/stock", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          totalFilled: parseInt(editStockFilled) || 0,
+          totalEmpty: parseInt(editStockEmpty) || 0,
+        }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("Stock updated");
+      setShowEditStock(false);
+      fetchDashboard();
+    } catch {
+      toast.error("Could not update stock");
+    } finally {
+      setStockSaving(false);
+    }
+  }
 
   return (
     <AppShell>
@@ -290,8 +326,8 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Three stat squares ─────────────────────────────── */}
-      <div className="stat-squares" style={{ marginTop: 8 }}>
+      {/* ── Four stat squares ─────────────────────────────── */}
+      <div className="stat-squares" style={{ marginTop: 8, gridTemplateColumns: "repeat(4, 1fr)" }}>
         {/* Due payments */}
         <button
           className={`stat-square${activeTab === "due" ? " active-stat" : ""}`}
@@ -361,6 +397,28 @@ export default function DashboardPage() {
             {data ? data.totalDelivered : "—"}
           </div>
           <div className="stat-square-label">Total Filled</div>
+        </button>
+
+        {/* Total Stock */}
+        <button
+          className={`stat-square${activeTab === "stock" ? " active-stat" : ""}`}
+          onClick={() => setActiveTab(activeTab === "stock" ? "customers" : "stock")}
+          style={{
+            borderColor: activeTab === "stock" ? "var(--navy)" : "var(--navy-border)",
+            background: activeTab === "stock" ? "var(--navy-pale)" : "var(--white)"
+          }}
+        >
+          <div className="stat-square-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 2px 4px rgba(26,58,92,0.15))" }}>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" fill="var(--navy)" fillOpacity="0.1" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+          </div>
+          <div className="stat-square-value">
+            {data ? (data.totalFilled + data.totalEmpty) : "—"}
+          </div>
+          <div className="stat-square-label">Total Stock</div>
         </button>
       </div>
 
@@ -575,6 +633,97 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {activeTab === "stock" && (
+        <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: "16px", borderBottom: "1px solid var(--navy-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--navy)", margin: 0 }}>Total Stock</h3>
+              <button
+                onClick={() => setShowEditStock(true)}
+                style={{
+                  background: "var(--navy-pale)",
+                  border: "1px solid var(--navy-border)",
+                  borderRadius: "var(--radius-sm)",
+                  padding: "4px 8px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "var(--navy)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  transition: "all 0.15s"
+                }}
+                title="Edit Stock"
+              >
+                ✏️ Edit
+              </button>
+            </div>
+            <button onClick={() => setActiveTab("customers")} style={{ fontSize: 12, fontWeight: 600, color: "var(--navy)" }}>
+              Back to Customers
+            </button>
+          </div>
+          <div style={{ display: "flex" }}>
+            {/* Column 1: Filled Cylinders */}
+            <div style={{ flex: 1, padding: "24px 16px", textAlign: "center", borderRight: "1px solid var(--navy-border)" }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  background: "rgba(22,163,74,0.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z" fill="var(--success)" fillOpacity="0.15" />
+                    <path d="M9 5a3 3 0 0 1 6 0" />
+                    <line x1="9" y1="5" x2="9" y2="9" />
+                    <line x1="15" y1="5" x2="15" y2="9" />
+                    <circle cx="12" cy="15" r="3" fill="var(--success)" />
+                  </svg>
+                </div>
+              </div>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "var(--success)", fontFamily: "var(--font-mono)", lineHeight: 1 }}>
+                {data ? data.totalFilled : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginTop: 8 }}>
+                Filled Cylinders
+              </div>
+            </div>
+
+            {/* Column 2: Empty Cylinders */}
+            <div style={{ flex: 1, padding: "24px 16px", textAlign: "center" }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  background: "rgba(220,38,38,0.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 9h12v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9z" />
+                    <path d="M9 5a3 3 0 0 1 6 0" />
+                    <line x1="9" y1="5" x2="9" y2="9" />
+                    <line x1="15" y1="5" x2="15" y2="9" />
+                  </svg>
+                </div>
+              </div>
+              <div style={{ fontSize: "28px", fontWeight: 700, color: "var(--danger)", fontFamily: "var(--font-mono)", lineHeight: 1 }}>
+                {data ? data.totalEmpty : "—"}
+              </div>
+              <div style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em", marginTop: 8 }}>
+                Empty Cylinders
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── FAB: Add Customer ───────────────────────────────── */}
       <button className="fab" onClick={() => setShowAddCustomer(true)} title="Add Customer">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -630,6 +779,69 @@ export default function DashboardPage() {
             >
               Done
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Edit Stock Modal ───────────────────────────────── */}
+      {showEditStock && (
+        <div className="overlay center" onClick={() => setShowEditStock(false)}>
+          <div
+            className="modal center-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{ padding: "24px", borderRadius: "var(--radius-lg)", width: "92%", maxWidth: "400px" }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--navy)" }}>Edit Total Stock</span>
+              <button onClick={() => setShowEditStock(false)} style={{ fontSize: 24, color: "var(--text-muted)", background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveStock} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Filled Cylinders Stock</label>
+                <input
+                  type="number"
+                  min="0"
+                  className="form-input"
+                  value={editStockFilled}
+                  onChange={(e) => setEditStockFilled(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Empty Cylinders Stock</label>
+                <input
+                  type="number"
+                  min="0"
+                  className="form-input"
+                  value={editStockEmpty}
+                  onChange={(e) => setEditStockEmpty(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{ flex: 1 }}
+                  onClick={() => setShowEditStock(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ flex: 1 }}
+                  disabled={stockSaving}
+                >
+                  {stockSaving ? "Saving..." : "Save Stock"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

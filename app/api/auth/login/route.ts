@@ -7,32 +7,16 @@ export async function POST(request: Request) {
   try {
     const { pin } = await request.json();
 
-    // ==========================================
-    // DEMO BYPASS: Accept "1234" automatically
-    // ==========================================
-    if (pin === "123456") {
-      const session = await getSession();
-      session.isLoggedIn = true;
-      await session.save();
-
-      return NextResponse.json({
-        success: true,
-        message: "Demo login successful",
-      });
-    }
-    // ==========================================
-
-    // Get admin row
-    const admin = await prisma.admin.findFirst();
+    // Get admin row or auto-initialize with default PIN "123456" if missing
+    let admin = await prisma.admin.findFirst();
 
     if (!admin) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Admin configuration not found",
+      const hashedDefault = await bcrypt.hash("123456", 10);
+      admin = await prisma.admin.create({
+        data: {
+          adminPin: hashedDefault,
         },
-        { status: 404 }
-      );
+      });
     }
 
     // Compare entered PIN with hashed DB PIN

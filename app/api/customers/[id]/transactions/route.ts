@@ -75,16 +75,17 @@ export async function POST(
 
     // ── Update agency stock ──────────────────────────────────
     // Delivered cylinders leave agency (filled - delivered), empties return (empty + collected)
-    const stock = await prisma.agencyStock.findFirst();
-    if (stock) {
-      await prisma.agencyStock.update({
-        where: { id: stock.id },
-        data: {
-          totalFilled: Math.max(0, stock.totalFilled - delivered),
-          totalEmpty: stock.totalEmpty + collected,
-        },
-      });
+    let stock = await prisma.agencyStock.findFirst();
+    if (!stock) {
+      stock = await prisma.agencyStock.create({ data: {} });
     }
+    await prisma.agencyStock.update({
+      where: { id: stock.id },
+      data: {
+        totalFilled: Math.max(0, stock.totalFilled - delivered),
+        totalEmpty: stock.totalEmpty + collected,
+      },
+    });
 
     // ── Activity logs ────────────────────────────────────────
     const logs = [];
