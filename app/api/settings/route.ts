@@ -34,12 +34,13 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
+    console.log("Settings PATCH body:", body);
     const {
-  logoUrl,
-  darkMode,
-  currentPin,
-  newPin,
-} = body;
+      logoUrl,
+      darkMode,
+      currentPin,
+      newPin,
+    } = body;
 
 
 
@@ -53,23 +54,30 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "App configuration not found" }, { status: 404 });
     }
     if (currentPin && newPin) {
-  const validPin = await bcrypt.compare(
-    currentPin,
-    adminRow.adminPin
-  );
+      const pinStr = String(currentPin);
+      const newPinStr = String(newPin);
+      
+      console.log("Settings update - comparing currentPin:", pinStr, "with hash:", adminRow.adminPin);
+      
+      const validPin = await bcrypt.compare(
+        pinStr,
+        adminRow.adminPin
+      );
 
-  if (!validPin) {
-    return NextResponse.json(
-      { error: "Current PIN is incorrect" },
-      { status: 400 }
-    );
-  }
+      console.log("Settings update - comparison result:", validPin);
 
-  updateData.adminPin = await bcrypt.hash(
-    newPin,
-    10
-  );
-}
+      if (!validPin) {
+        return NextResponse.json(
+          { error: "Current PIN is incorrect" },
+          { status: 400 }
+        );
+      }
+
+      updateData.adminPin = await bcrypt.hash(
+        newPinStr,
+        10
+      );
+    }
     // Update the config
     const admin = await prisma.admin.update({
       where: { id: adminRow.id },
