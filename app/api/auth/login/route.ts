@@ -30,11 +30,6 @@ export async function POST(request: Request) {
         {
           success: false,
           message: "Invalid PIN",
-          debug: {
-            adminId: admin.id,
-            adminCreatedAt: admin.createdAt,
-            dbHost: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).host : "no-url",
-          }
         },
         { status: 401 }
       );
@@ -55,7 +50,6 @@ export async function POST(request: Request) {
       {
         success: false,
         message: "Server error",
-        debugError: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     );
