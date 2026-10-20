@@ -44,12 +44,13 @@ export async function POST(request: Request) {
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Login API Error:", error);
 
     return NextResponse.json(
       {
         success: false,
         message: "Server error",
+        debugError: error instanceof Error ? error.message : String(error),
       },
       { status: 500 }
     );
