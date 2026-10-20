@@ -30,6 +30,11 @@ export async function POST(request: Request) {
         {
           success: false,
           message: "Invalid PIN",
+          debug: {
+            adminId: admin.id,
+            adminCreatedAt: admin.createdAt,
+            dbHost: process.env.DATABASE_URL ? new URL(process.env.DATABASE_URL).host : "no-url",
+          }
         },
         { status: 401 }
       );
