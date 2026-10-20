@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Maa Gogas Agency',
   webDir: 'out',
   server: {
-    url: 'https://maa-gogas-agency.vercel.app/',
+    url: 'https://kuber-agency.vercel.app/',
     cleartext: true,
   }
 };
