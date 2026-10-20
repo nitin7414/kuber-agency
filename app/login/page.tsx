@@ -39,7 +39,7 @@ export default function PinLogin() {
           // Attempt to auto-login immediately
           try {
             const credentials = await NativeBiometric.getCredentials({
-              server: "ssga",
+              server: "maa_gogas_agency",
             });
 
             // If credentials exist, submit them automatically
@@ -82,7 +82,7 @@ export default function PinLogin() {
           await NativeBiometric.setCredentials({
             username: "admin",
             password: pinToSubmit,
-            server: "ssga",
+            server: "maa_gogas_agency",
           });
         } catch (e) {
           console.error("Could not save biometric credentials", e);
@@ -102,7 +102,7 @@ export default function PinLogin() {
   const handleBiometricScan = async () => {
     try {
       const credentials = await NativeBiometric.getCredentials({
-        server: "ssga",
+        server: "maa_gogas_agency",
       });
 
       if (credentials && credentials.password) {
@@ -131,7 +131,7 @@ export default function PinLogin() {
         <div className="pin-logo-wrapper">
           <Image 
             src="/logo.png" 
-            alt="Kuber-agency" 
+            alt="Maa Gogas Agency" 
             width={70} 
             height={70} 
             className="pin-logo"

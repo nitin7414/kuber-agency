@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       return new NextResponse(csv, {
         headers: {
           "Content-Type": "text/csv",
-          "Content-Disposition": `attachment; filename="ssga-activity-${Date.now()}.csv"`,
+          "Content-Disposition": `attachment; filename="maa-gogas-agency-activity-${Date.now()}.csv"`,
         },
       });
     }

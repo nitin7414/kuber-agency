@@ -6,8 +6,8 @@ export interface SessionData {
 }
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || "ssga-secure-session-secret-string-at-least-32-chars-long",
-  cookieName: "ssga_session",
+  password: process.env.SESSION_SECRET || "maa-gogas-agency-secure-session-secret-string-at-least-32-chars-long",
+  cookieName: "mga_session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,

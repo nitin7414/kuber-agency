@@ -5,13 +5,13 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { SecurityProvider } from "@/components/SecurityProvider";
 
 export const metadata: Metadata = {
-  title: "Kuber-agency",
+  title: "Maa Gogas Agency",
   description: "LPG Agency Management System",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "SSGA",
+    title: "Maa Gogas Agency",
   },
 };
 

@@ -74,7 +74,7 @@ export default function DashboardPage() {
       const a = document.createElement("a");
       a.href = url;
       const contentDisposition = res.headers.get("content-disposition");
-      let fileName = `ssga_database_backup_${new Date().toISOString().split("T")[0]}.json`;
+      let fileName = `maa_gogas_agency_database_backup_${new Date().toISOString().split("T")[0]}.json`;
       if (contentDisposition) {
         const matches = /filename="([^"]+)"/.exec(contentDisposition);
         if (matches && matches[1]) fileName = matches[1];
@@ -114,7 +114,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (data) {
       const lastBackupStr = data.lastBackupDate;
-      const dismissedAtStr = localStorage.getItem("ssga_backup_banner_dismissed_at");
+      const dismissedAtStr = localStorage.getItem("mga_backup_banner_dismissed_at");
       
       let needsBackup = false;
       if (!lastBackupStr) {
@@ -268,7 +268,7 @@ export default function DashboardPage() {
           {/* Close button in top-right */}
           <button
             onClick={() => {
-              localStorage.setItem("ssga_backup_banner_dismissed_at", new Date().toISOString());
+              localStorage.setItem("mga_backup_banner_dismissed_at", new Date().toISOString());
               setShowBackupBanner(false);
             }}
             style={{
@@ -314,7 +314,7 @@ export default function DashboardPage() {
             </button>
             <button
               onClick={() => {
-                localStorage.setItem("ssga_backup_banner_dismissed_at", new Date().toISOString());
+                localStorage.setItem("mga_backup_banner_dismissed_at", new Date().toISOString());
                 setShowBackupBanner(false);
               }}
               className="btn btn-outline btn-sm"

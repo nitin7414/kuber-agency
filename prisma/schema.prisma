@@ -1,4 +1,4 @@
-// Prisma Schema - Shri Shyam Gas Agency Management System
+// Prisma Schema - Maa Gogas Agency Management System
 // Database: Neon (PostgreSQL)
 
 generator client {
@@ -19,7 +19,7 @@ model Admin {
   darkMode     Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  adminPin     String @default("245773")
+  adminPin     String
 }
 
 // ─────────────────────────────────────────

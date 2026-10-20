@@ -139,7 +139,7 @@ export default function SettingsPage() {
       const a = document.createElement("a");
       a.href = url;
       const contentDisposition = res.headers.get("content-disposition");
-      let fileName = `ssga_database_backup_${new Date().toISOString().split("T")[0]}.json`;
+      let fileName = `maa_gogas_agency_database_backup_${new Date().toISOString().split("T")[0]}.json`;
       if (contentDisposition) {
         const matches = /filename="([^"]+)"/.exec(contentDisposition);
         if (matches && matches[1]) fileName = matches[1];

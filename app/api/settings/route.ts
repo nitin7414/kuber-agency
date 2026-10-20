@@ -57,14 +57,10 @@ export async function PATCH(req: NextRequest) {
       const pinStr = String(currentPin);
       const newPinStr = String(newPin);
       
-      console.log("Settings update - comparing currentPin:", pinStr, "with hash:", adminRow.adminPin);
-      
       const validPin = await bcrypt.compare(
         pinStr,
         adminRow.adminPin
       );
-
-      console.log("Settings update - comparison result:", validPin);
 
       if (!validPin) {
         return NextResponse.json(

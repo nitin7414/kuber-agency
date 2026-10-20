@@ -60,7 +60,7 @@ export default function ActivityPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `ssga-activity-${Date.now()}.csv`;
+    a.download = `maa-gogas-agency-activity-${Date.now()}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }

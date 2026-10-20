@@ -16,7 +16,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [darkMode, setDarkModeState] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("ssga_dark");
+    const saved = localStorage.getItem("mga_dark") ?? localStorage.getItem("ssga_dark");
     if (saved === "true") {
       setDarkModeState(true);
       document.documentElement.setAttribute("data-theme", "dark");
@@ -25,7 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setDarkMode = (val: boolean) => {
     setDarkModeState(val);
-    localStorage.setItem("ssga_dark", String(val));
+    localStorage.setItem("mga_dark", String(val));
     document.documentElement.setAttribute("data-theme", val ? "dark" : "light");
   };
 

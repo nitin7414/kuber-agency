@@ -24,7 +24,7 @@ export async function GET() {
     ]);
 
     const backupPayload = {
-      app: "Kuber-agency",
+      app: "Maa Gogas Agency",
       version: "1.0",
       backupDate: new Date().toISOString(),
       data: {
@@ -36,7 +36,7 @@ export async function GET() {
       },
     };
 
-    const fileName = `ssga_database_backup_${new Date().toISOString().split("T")[0]}.json`;
+    const fileName = `maa_gogas_agency_database_backup_${new Date().toISOString().split("T")[0]}.json`;
 
     // Log the backup download event in the database
     try {
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       !Array.isArray(payload.data.activityLogs)
     ) {
       return NextResponse.json(
-        { error: "Invalid backup file structure. Please upload a valid SSGA backup JSON file." },
+        { error: "Invalid backup file structure. Please upload a valid Maa Gogas Agency backup JSON file." },
         { status: 400 }
       );
     }
